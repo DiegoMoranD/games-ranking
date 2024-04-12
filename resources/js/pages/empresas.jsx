@@ -1,12 +1,12 @@
 import React from 'react'
 
-function Container() {
+function Empresas() {
   return (
     <section className='z-10 -mt-20 justify-center flex '>
         <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35'>
             <div className=' text-[#6C727F] font-semibold py-8 flex justify-between'>
                 <div className='ml-10'>
-                    <p className=''>Juegos contados 56</p>
+                    <p className=''>Empresas contadas 56</p>
                 </div>
                 <div className='mr-10'>
                     <input type="search" name="" placeholder='Buscar' id="" className=' rounded-xl bg-[#282B30] w-[250px] h-[40px] indent-6 content-center'/>
@@ -65,7 +65,7 @@ function Container() {
         </div>
     </main>
 </section>
-    )
+  )
 }
 
-export default Container
+export default Empresas

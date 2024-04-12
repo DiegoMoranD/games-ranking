@@ -1,2 +1,2 @@
 import './bootstrap';
-import './Page'
+import './Page.jsx'
