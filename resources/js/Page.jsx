@@ -9,6 +9,8 @@ import Subir from './pages/subir'
 import Login from './pages/login'
 import Empresas from './pages/empresas'
 import Register from './pages/register'
+import JuegosForm from './pages/forms/juegos'
+import EmpresasForm from './pages/forms/empresas'
 
 function PageMain() {
   return (
@@ -21,6 +23,8 @@ function PageMain() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/subir' element={<Subir/>}/>
+        <Route path='/subir/juego' element={<JuegosForm/>}/>
+        <Route path='/subir/empresa' element={<EmpresasForm/>}/>
       </Routes>  
     </BrowserRouter>
   )

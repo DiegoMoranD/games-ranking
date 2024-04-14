@@ -22,4 +22,7 @@ Route::get('/{any}', function () {
     return view('welcome');
 });
 
+Route::get('/subir/{any}', function () {
+    return view('welcome');
+});
 

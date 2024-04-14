@@ -41,22 +41,20 @@ function Empresas() {
                 <thead className='text-[13px] font-black border-[#6C727F] border-b-[1px] border-opacity-35'>
                     <tr className=' text-left '>
                         <th scope="col" className='py-4 pl-8'>Logo</th>
-                        <th scope="col">Juego</th>
-                        <th scope="col">Descargas</th>
-                        <th scope="col">Votacion</th>
-                        <th scope="col">Compañia</th>
-                        <th scope="col">Genero</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Fundado</th>
+                        <th scope="col">Empleados</th>
                     </tr>
                 </thead>
 
                 <tbody className='text-[#D2D5DA]'>
                     <tr className=''>
-                        <td scope="" className='pl-8'>Chris</td>
-                        <td>Zelda</td>
-                        <td>100000</td>
-                        <td>9.8</td>
+                        <td scope="" className='pl-8'>xxx</td>
                         <td>Nintendo</td>
-                        <td>Aventura</td>
+                        <td>Privada</td>
+                        <td>1889</td>
+                        <td>2000</td>
                     </tr>
                 </tbody>
                 </table>
