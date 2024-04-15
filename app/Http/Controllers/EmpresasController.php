@@ -58,5 +58,10 @@ public function update(Request $request, $id)
     return response()->json(['message' => 'Empresa actualizada exitosamente'], 200);
 }
 
+public function destroy($id){
+    $empresas = Empresas::find($id);
+    $empresas->delete();
+    return response()->json(['Registro Borrado'], 200);
+}
 
 }

@@ -29,6 +29,8 @@ Route::post('storeEmpresa', [EmpresasController::class, 'store']);
 
 Route::put('empresas/{id}', [EmpresasController::class, 'update']);
 
+Route::delete('empresas/{id}', [EmpresasController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
