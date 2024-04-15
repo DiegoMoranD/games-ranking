@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JuegosController;
-
+use App\Http\Controllers\EmpresasController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,11 +15,19 @@ use App\Http\Controllers\JuegosController;
 |
 */
 
+
+
 Route::prefix('v1')->group(function (){
     
 });
 
-Route::get('getjuegos',[JuegosController::class,'index']);
+Route::get('getJuegos',[JuegosController::class,'index']);
+
+Route::get('getempresas',[EmpresasController::class,'index']);
+
+Route::post('storeEmpresa', [EmpresasController::class, 'store']);
+
+Route::put('empresas/{id}', [EmpresasController::class, 'update']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
