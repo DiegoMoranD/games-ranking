@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    @vite('resources/js/Page.jsx')
+    @vite('resources/js/App.jsx')
     @vite('resources/css/app.css')
-    <link rel="stylesheet" href="../css/app.css">
+    <!-- <link rel="stylesheet" href="../css/app.css"> -->
 </head>
 
 <body>

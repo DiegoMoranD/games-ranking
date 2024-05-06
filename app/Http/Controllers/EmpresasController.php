@@ -16,7 +16,7 @@ class EmpresasController extends Controller
     public function store(Request $request){
     $request->validate([
         'nombre' => 'required|string',
-        'logo' => 'required|string',
+        'logo' => 'string',
         'tipo' => 'required|string',
         'ano' => 'required|integer',
         'empleados' => 'required|integer',

@@ -1,29 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import ReactDOM  from 'react-dom/client'
-import Config from '../../Config';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import Config from '../Config';
 
-function JuegosForm() {
-    // ? ______________________________________________________________
-
-    
-
-    // ? ______________________________________________________________
-
+function JuegoUpdate() {
+    const { id } = useParams()
     const [descargas, setDescargas] = useState("");
-    const [votacion, setVotacion] = useState("");
     const [empresa_id, setEmpresa] = useState("");
+    const [votacion, setVotacion] = useState("");
     const [nombre, setNombre] = useState("");
     const [genero, setGenero] = useState("");
     const [logo, setLogo] = useState("");
 
-    const submitJuego = async(e)=>{
-        e.preventDefault();
-        await Config.getJuegoStore({logo, nombre, votacion, descargas, empresa_id, genero})
+    useEffect(()=>{
+        const _getJuegoUpdate = async()=>{
+            Config.getJuegoId(id)
+            .then(({data})=>{
+                setDescargas(data.descargas)
+                setEmpresa(data.empresa_id)
+                setVotacion(data.votacion)
+                setGenero(data.genero)
+                setNombre(data.nombre)
+                setLogo(data.logo)
+            })
+        };
+        _getJuegoUpdate();
+    },[])
+
+    const submitUpdate = async (ev) => {
+        ev.preventDefault()
+        await Config.getJuegoUpdate({logo, nombre, votacion, descargas, genero, empresa_id}, id)
+        
     }
 
-return (
-<form action="" onSubmit={submitJuego}>
+ return (
+<form action="" onSubmit={submitUpdate}>
 <section className='z-10 -mt-20 justify-center flex '>
     <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35 p-10'>
         <div>
@@ -93,13 +103,12 @@ return (
         </div>
 
         <div className='flex justify-between'>
-            <button type='submit' className=' w-full text-white font-medium bg-blue-500 h-10 rounded-md hover:bg-blue-400 transition-colors duration-300'>Subir</button>
+            <button type='submit' className=' w-full text-white font-medium bg-blue-500 h-10 rounded-md hover:bg-blue-400 transition-colors duration-300'>Actualizar</button>
         </div>
     </main>
 </section>
 </form>
-);
+)
 }
 
-export default JuegosForm
-
+export default JuegoUpdate

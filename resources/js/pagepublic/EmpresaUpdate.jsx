@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
-import Config from '../../Config';
+import React, { useEffect, useState } from 'react';
+import Config from '../Config';
+import { useParams } from 'react-router-dom';
 
-function EmpresasForm() {
+function EmpresaUpdate() {
+    const { id } = useParams()
     const [empleados, setEmpleados] = useState("");
     const [nombre, setNombre] = useState("");
     const [tipo, setTipo] = useState("");
     const [logo, setLogo] = useState("");
     const [ano, setAno] = useState("");
 
-    const submitEmpresa = async(e)=>{
-        e.preventDefault();
-        await Config.getEmpresaStore({nombre, tipo, empleados, ano, logo})
+    useEffect(()=>{
+        const _getEmpresaUpdate = async()=>{
+            Config.getEmpresaId(id)
+            .then(({data})=>{
+                setEmpleados(data.empleados)
+                setNombre(data.nombre)
+                setTipo(data.tipo)
+                setLogo(data.logo)
+                setAno(data.ano)
+            })
+        };
+        _getEmpresaUpdate();
+    },[])
+
+    const submitEmpresaUpdate = async(ev)=>{
+        ev.preventDefault();
+        await Config.getEmpresaUpdate({nombre, tipo, empleados, ano, logo}, id)
     }
 
     return (
-        <form action="" onSubmit={submitEmpresa}>
+        <form action="" onSubmit={submitEmpresaUpdate}>
         <section className='z-10 -mt-20 justify-center flex '>
             <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35 p-10'>
                 <div>
@@ -62,4 +78,4 @@ function EmpresasForm() {
     );
 }
 
-export default EmpresasForm;
+export default EmpresaUpdate;

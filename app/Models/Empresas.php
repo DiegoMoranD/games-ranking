@@ -11,4 +11,12 @@ class Empresas extends Model
     protected $guarded = [];
     protected $fillable=['logo', 'tipo', 'nombre', 'ano', 'empleados'];
     protected $table = 'empresas';
+
+    public function juegos(){
+        return $this->belongsTo(Juegos::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

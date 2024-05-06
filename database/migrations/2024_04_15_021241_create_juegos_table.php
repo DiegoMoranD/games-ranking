@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('logo');
             $table->string('nombre');
             $table->integer('descargas');
-            $table->integer('votacion');
+            $table->float('votacion');
+            $table->unsignedBigInteger('empresa_id'); 
             $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade');
             $table->string('genero');
             $table->timestamps();

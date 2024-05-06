@@ -1,6 +1,29 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
+import Config from '../Config';
+import { Link } from 'react-router-dom';
 
 function Empresas() {
+
+    const [empresas, setEmpresas] = useState();
+
+    useEffect(()=>{
+        getAllEmpresa()
+    },[])
+
+    const getAllEmpresa = async()=>{
+        const response = await Config.getAllEmpresa()
+        setEmpresas(response.data)
+    }
+
+    const _deleteEmpresa = async(id)=>{
+        const isDelete = window.confirm("¿Desea Borrar Juego?")
+        if (isDelete) {
+            await Config.getEmpresaDelete(id)
+            getAllEmpresa()
+        }
+    }
+
   return (
     <section className='z-10 -mt-20 justify-center flex '>
         <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35'>
@@ -49,13 +72,25 @@ function Empresas() {
                 </thead>
 
                 <tbody className='text-[#D2D5DA]'>
-                    <tr className=''>
-                        <td scope="" className='pl-8'>xxx</td>
-                        <td>Nintendo</td>
-                        <td>Privada</td>
-                        <td>1889</td>
-                        <td>2000</td>
-                    </tr>
+                    
+                {
+                        !empresas ? "<h1>Cargando...</h1>" : empresas.map(
+                            (empresa) =>{
+                                return(
+                                <tr key={empresa.id}>
+                                    <td>{empresa.logo}</td>
+                                    <td>{empresa.nombre}</td>                                    
+                                    <td>{empresa.tipo}</td>                                    
+                                    <td>{empresa.ano}</td>                                    
+                                    <td>{empresa.empleados}</td>                                    
+                                    <td><Link to={`/empresas/edit/${empresa.id}`} className='bg-blue-500 rounded p-1'>Editar</Link></td>
+                                    <td><button onClick={()=>_deleteEmpresa(empresa.id)} className='bg-red-500 rounded p-1'>Eliminar</button></td>                                
+                                </tr>
+                                )
+                            }
+                        )
+                    }
+
                 </tbody>
                 </table>
             </div>

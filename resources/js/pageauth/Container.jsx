@@ -1,21 +1,29 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import Config from '../Config';
+import { Link } from 'react-router-dom';
 
 function Container() {
-
-    const [juegos, setJuegos] = useState([])
+    const [juegos, setJuegos] = useState();
 
     useEffect(()=>{
-        getJuegosAll();
-    },[]);
+        _getAllJuego()
+    },[])
 
-    const getJuegosAll = async () =>{
-        const response = await Config.getJuegosAll()
-        console.log(response.data)
+    const _getAllJuego = async()=>{
+        const response = await Config.getAllJuego()
         setJuegos(response.data)
     }
 
-  return (
+    const _deleteJuego = async(id)=>{
+        const isDelete = window.confirm("¿Desea Borrar Juego?")
+        if (isDelete) {
+            await Config.getJuegoDelete(id)
+            _getAllJuego()
+        }
+    }
+
+return (
     <section className='z-10 -mt-20 justify-center flex '>
         <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35'>
             <div className=' text-[#6C727F] font-semibold py-8 flex justify-between'>
@@ -78,18 +86,18 @@ function Container() {
                     </tr> */}
 
                     {
-                        !juegos ? "... ;-;" : juegos.map(
-                            (juego) => {
+                        !juegos ? <h1 className='text-[22px] text-center z-[-1] '>Cargando...</h1> : juegos.map(
+                            (juego) =>{
                                 return(
-                                <tr className='' key={juego.id}>
-                                    <td scope="" className='pl-8'>{juego.id}</td>
-                                    <td>{juego.nombre}</td>
-                                    <td>100000</td>
-                                    <td>9.8</td>
-                                    <td>Nintendo</td>
-                                    <td>Aventura</td>
-                                    <td><button className='bg-blue-500 rounded'>Editar</button></td>
-                                    <td><button className='bg-red-500 rounded'>Eliminar</button></td>
+                                <tr key={juego.id}>
+                                    <td>{juego.logo}</td>
+                                    <td>{juego.nombre}</td>                                    
+                                    <td>{juego.descargas}</td>                                    
+                                    <td>{juego.votacion}</td>                                    
+                                    <td>{juego.empresa_id}</td>                                    
+                                    <td>{juego.genero}</td>
+                                    <td><Link to={`/juegos/edit/${juego.id}`} className='bg-blue-500 rounded p-1'>Editar</Link> </td>
+                                    <td><button onClick={()=>_deleteJuego(juego.id)} className='bg-red-500 rounded p-1'>Eliminar</button></td>                                
                                 </tr>
                                 )
                             }
