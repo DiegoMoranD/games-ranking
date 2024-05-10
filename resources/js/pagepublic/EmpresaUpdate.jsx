@@ -24,6 +24,11 @@ function EmpresaUpdate() {
         _getEmpresaUpdate();
     },[])
 
+    const handleLogoChange = (e) => {
+        setLogo(e.target.files[0]); // Update logo state with the uploaded file
+    }
+
+
     const submitEmpresaUpdate = async(ev)=>{
         ev.preventDefault();
         await Config.getEmpresaUpdate({nombre, tipo, empleados, ano, logo}, id)
@@ -40,37 +45,44 @@ function EmpresaUpdate() {
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className=' text-white font-semibold pb-2'>Nombre: </label>
-                        <input value={nombre} onChange={(e) => setNombre(e.target.value)} required type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                        <input value={nombre} onChange={(e) => setNombre(e.target.value)} type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
                     </div>
                 </div>
 
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className=' text-white font-semibold pb-2'>Tipo: </label>
-                        <input value={tipo} onChange={(e) => setTipo(e.target.value)} required type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                        <select value={tipo} onChange={(e) => setTipo(e.target.value)} name="" id="" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-zinc-100'>
+                            <option value="">Seleccione el genero</option>
+                            <option value="Privada">Privada</option>
+                            <option value="Publica">Publica</option>
+                            <option value="Sin fines de lucro">Sin fines de lucro</option>
+                            <option value="Independiente">Independiente</option>
+                            <option value="Cooperativa">Cooperativa</option>
+                        </select>
                     </div>
                 </div>
 
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[48%]'>
                         <label htmlFor="" className=' text-white font-semibold pb-2'>Fundado (Año): </label>
-                        <input value={ano} onChange={(e) => setAno(e.target.value)} required type="number" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white ' />
+                        <input value={ano} onChange={(e) => setAno(e.target.value)} type="number" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white ' />
                     </div>
                     <div className='flex flex-col w-[48%]'>
                         <label htmlFor="" className='text-white font-semibold pb-2'>Empleados: </label>
-                        <input value={empleados} onChange={(e) => setEmpleados(e.target.value)} required type="number" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                        <input value={empleados} onChange={(e) => setEmpleados(e.target.value)} type="number" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
                     </div>
                 </div>
 
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className='text-white font-semibold pb-2'>Logo: </label>
-                        <input value={logo} onChange={(e) => setLogo(e.target.value)} required type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                        <input type="file" onChange={handleLogoChange} accept="imgs/*"/>
                     </div>
                 </div>
 
                 <div className='flex justify-between'>
-                    <button type='submit' className=' w-full text-white font-medium bg-blue-500 h-10 rounded-md hover:bg-blue-400 transition-colors duration-300'>Subir</button>
+                    <button type='submit' className=' w-full text-white font-medium bg-blue-500 h-10 rounded-md hover:bg-blue-400 transition-colors duration-300'>Actualizar</button>
                 </div>
             </main>
         </section>

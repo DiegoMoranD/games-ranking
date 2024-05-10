@@ -71,20 +71,20 @@ function Empresas() {
                     </tr>
                 </thead>
 
-                <tbody className='text-[#D2D5DA]'>
+                <tbody className='text-[#D2D5DA] font-medium '>
                     
                 {
-                        !empresas ? "<h1>Cargando...</h1>" : empresas.map(
+                        !empresas ? <h1>Cargando</h1> : empresas.map(
                             (empresa) =>{
                                 return(
-                                <tr key={empresa.id}>
-                                    <td>{empresa.logo}</td>
-                                    <td>{empresa.nombre}</td>                                    
-                                    <td>{empresa.tipo}</td>                                    
-                                    <td>{empresa.ano}</td>                                    
-                                    <td>{empresa.empleados}</td>                                    
-                                    <td><Link to={`/empresas/edit/${empresa.id}`} className='bg-blue-500 rounded p-1'>Editar</Link></td>
-                                    <td><button onClick={()=>_deleteEmpresa(empresa.id)} className='bg-red-500 rounded p-1'>Eliminar</button></td>                                
+                                <tr key={empresa.id}   className='pb-4'>
+                                    <td className='pb-4 flex justify-center'><img src={`/storage/${empresa.logo}`} alt=""  className="w-20 rounded justify-start"/></td>
+                                    <td className='pb-4'>{empresa.nombre}</td>                                    
+                                    <td  className='pb-4'>{empresa.tipo}</td>                                    
+                                    <td  className='pb-4'>{empresa.ano}</td>                                    
+                                    <td  className='pb-4'>{empresa.empleados}</td>                                    
+                                    <td  className='pb-4'><Link to={`/empresas/edit/${empresa.id}`} className='bg-blue-500 rounded p-1'>Editar</Link></td>
+                                    <td className='pb-4'><button onClick={()=>_deleteEmpresa(empresa.id)} className='bg-red-500 rounded p-1'>Eliminar</button></td>                                
                                 </tr>
                                 )
                             }

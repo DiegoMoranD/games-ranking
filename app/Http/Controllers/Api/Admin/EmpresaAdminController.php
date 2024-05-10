@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Empresas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class EmpresaAdminController extends Controller
@@ -17,20 +18,12 @@ class EmpresaAdminController extends Controller
     public function store(Request $request){
         $data = new Empresas($request->all());
 
-        // if($request->logo){
-        //     $img = $request -> logo;
-        //     $folderPath = "/public/imgs/empresa/";
-        //     $image_parts = explode(";base64", $img);
-        //     $image_type_aux = explode("image/", $image_parts[0]);
-        //     $image_type = $image_type_aux[1];
-        //     $image_base64 = base64_decode($image_parts[1]);
-        //     $file = $folderPath . Str::slug($request -> nombre) . '.'.$image_type;
-        //     file_put_contents(public_path($file), $image_base64);
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('imgs/empresa/', 'public');
+            $data->logo = $logoPath;
+        }
 
-        //     $data -> logo = Str::slug($request -> nombre) . '.'.$image_type;
-        // }
-
-        // $data -> slug = Str::slug($request->nombre); 
         $data -> save();
         return response()->json($data,200);
     }
@@ -42,28 +35,28 @@ class EmpresaAdminController extends Controller
 
     public function update(Request $request, $id){
         $data = Empresas::find($id);
-        $data -> fill($request->all());
-
-        // if($request->logo){
-        //     $img = $request -> logo;
-        //     $folderPath = "/public/imgs/empresa/";
-        //     $image_parts = explode(";base64", $img);
-        //     $image_type_aux = explode("image/", $image_parts[0]);
-        //     $image_type = $image_type_aux[1];
-        //     $image_base64 = base64_decode($image_parts[1]);
-        //     $file = $folderPath . Str::slug($request -> nombre) . '.'.$image_type;
-        //     file_put_contents(public_path($file), $image_base64);
-
-        //     $data -> logo = Str::slug($request -> nombre) . '.'.$image_type;
-        // }
-        // $data -> slug = Str::slug($request->nombre);
-        $data -> save();
+        $data->fill($request->except('logo')); // Fill all fields except logo
+        
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('imgs/empresa/', 'public');
+            $data->logo = $logoPath;
+        }
+    
+        $data->save();
         return response()->json($data, 200);
     }
+   
 
-    public function destroy($id){
-        $empresas = Empresas::find($id);
-        $empresas->delete();
+    public function destroy($id) {
+        $empresa = Empresas::find($id);
+    
+        if ($empresa->logo) {
+            Storage::disk('public')->delete($empresa->logo);
+        }
+    
+        $empresa->delete();
         return response()->json(['Registro Borrado'], 200);
     }
+    
 }

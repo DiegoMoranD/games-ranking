@@ -8,9 +8,20 @@ function EmpresasForm() {
     const [logo, setLogo] = useState("");
     const [ano, setAno] = useState("");
 
+    const handleLogoChange = (e) => {
+        setLogo(e.target.files[0]); // Update logo state with the uploaded file
+    }
+
     const submitEmpresa = async(e)=>{
         e.preventDefault();
-        await Config.getEmpresaStore({nombre, tipo, empleados, ano, logo})
+        const formData = new FormData(); // Create a FormData object
+        formData.append('nombre', nombre);
+        formData.append('tipo', tipo);
+        formData.append('empleados', empleados);
+        formData.append('ano', ano);
+        formData.append('logo', logo); // Add the logo file to the FormData
+
+        await Config.getEmpresaStore(formData);
     }
 
     return (
@@ -31,7 +42,14 @@ function EmpresasForm() {
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className=' text-white font-semibold pb-2'>Tipo: </label>
-                        <input value={tipo} onChange={(e) => setTipo(e.target.value)} required type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                        <select value={tipo} onChange={(e) => setTipo(e.target.value)} name="" id="" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-zinc-100'>
+                            <option value="">Seleccione el genero</option>
+                            <option value="Privada">Privada</option>
+                            <option value="Publica">Publica</option>
+                            <option value="Sin fines de lucro">Sin fines de lucro</option>
+                            <option value="Independiente">Independiente</option>
+                            <option value="Cooperativa">Cooperativa</option>
+                        </select>
                     </div>
                 </div>
 
@@ -47,9 +65,13 @@ function EmpresasForm() {
                 </div>
 
                 <div className='flex pb-8 justify-between'>
-                    <div className='flex flex-col w-[100%]'>
+                    {/* <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className='text-white font-semibold pb-2'>Logo: </label>
                         <input value={logo} onChange={(e) => setLogo(e.target.value)} required type="text" className='h-8 rounded bg-[#282B30] border border-white border-opacity-35 text-white' />
+                    </div> */}
+                    <div className='flex flex-col w-[100%]'>
+                        <label htmlFor="" className='text-white font-semibold pb-2'>Logo: </label>
+                        <input type="file" onChange={handleLogoChange} required accept="imgs/*"/>
                     </div>
                 </div>
 
