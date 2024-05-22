@@ -34,19 +34,21 @@ class EmpresaAdminController extends Controller
     }
 
     public function update(Request $request, $id){
-        $data = Empresas::find($id);
-        $data->fill($request->except('logo')); // Fill all fields except logo
-        
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-            $logoPath = $logo->store('imgs/empresa/', 'public');
-            $data->logo = $logoPath;
+    $data = Empresas::find($id);
+    $data->fill($request->except('logo')); // Fill all fields except logo
+
+    if ($request->hasFile('file')) {
+        $logo = $request->file('file');
+        $logoPath = $logo->store('imgs/empresa', 'public');
+        $data->logo = $logoPath;
+        if ($data->logo !== $logoPath) {
+            Storage::delete('public/' . $data->logo);
         }
-    
-        $data->save();
-        return response()->json($data, 200);
     }
-   
+
+    $data->save();
+    return response()->json($data, 200);
+}
 
     public function destroy($id) {
         $empresa = Empresas::find($id);

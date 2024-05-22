@@ -1,8 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Config from '../Config';
 import { useParams } from 'react-router-dom';
+import Modal from '../components/Modal';
 
 function EmpresaUpdate() {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    const [redirectPath, setRedirectPath] = useState("");
+
+    const openModal = (title, path) => {
+        setModalTitle(title);
+        setRedirectPath(path);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     const { id } = useParams()
     const [empleados, setEmpleados] = useState("");
     const [nombre, setNombre] = useState("");
@@ -31,11 +47,26 @@ function EmpresaUpdate() {
 
     const submitEmpresaUpdate = async(ev)=>{
         ev.preventDefault();
-        await Config.getEmpresaUpdate({nombre, tipo, empleados, ano, logo}, id)
+        
+        try {
+            const response = await Config.getEmpresaUpdate({nombre, tipo, empleados, ano, logo}, id);
+            if (response.status === 200) {
+                openModal(`Registro #${id} Actualizado`, "/empresas");
+            } else {
+            }
+        } catch (error) {
+            console.error("Error al enviar el formulario:", error);
+        }
     }
 
     return (
         <form action="" onSubmit={submitEmpresaUpdate}>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title={modalTitle}
+                redirectPath={redirectPath}
+            />
         <section className='z-10 -mt-20 justify-center flex '>
             <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35 p-10'>
                 <div>
@@ -77,6 +108,7 @@ function EmpresaUpdate() {
                 <div className='flex pb-8 justify-between'>
                     <div className='flex flex-col w-[100%]'>
                         <label htmlFor="" className='text-white font-semibold pb-2'>Logo: </label>
+                        <img src={`/storage/${logo}`} alt=""  className="w-20 rounded justify-start"/>
                         <input type="file" onChange={handleLogoChange} accept="imgs/*"/>
                     </div>
                 </div>

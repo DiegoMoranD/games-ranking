@@ -9,7 +9,7 @@ class Empresas extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $fillable=['logo', 'tipo', 'nombre', 'ano', 'empleados'];
+    protected $fillable = ['nombre', 'empleados', 'ano', 'tipo', 'logo'];
     protected $table = 'empresas';
 
     public function juegos(){

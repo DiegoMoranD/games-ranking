@@ -3,17 +3,44 @@ import { useState, useEffect } from 'react'
 import Config from '../Config';
 import { Link } from 'react-router-dom';
 
+import Modal from '../components/Modal';
+import AuthUser from './AuthUser';
+
+import FilterButtons from '../filters/filtersJuego/FilterJuego';
+import SearchJuego from '../filters/filtersJuego/SearchJuego';
+import SortJuego from '../filters/filtersJuego/SortJuego';
+
 function Container() {
-    const [juegos, setJuegos] = useState();
+    
+    const [juegos, setJuegos] = useState([]);
+    const { getToken } = AuthUser();
+    const [nombreEmpresa, setNombreEmpresa] = useState("");
+
+    const [filter, setFilter] = useState("");
+    const [sortBy, setSortBy] = useState("");
+    const [search, setSearch] = useState("");
+
 
     useEffect(()=>{
         _getAllJuego()
     },[])
 
-    const _getAllJuego = async()=>{
-        const response = await Config.getAllJuego()
-        setJuegos(response.data)
-    }
+    const _getAllJuego = async () => {
+        try {
+            const response = await Config.getAllJuego();
+            const juegosWithEmpresaName = await Promise.all(response.data.map(async juego => {
+                const empresaResponse = await Config.getEmpresaId(juego.empresa_id);
+                return {
+                    ...juego,
+                    empresa_nombre: empresaResponse.data.nombre
+                };
+            }));
+            setJuegos(juegosWithEmpresaName);
+        } catch (error) {
+            console.error('Error fetching juegos:', error);
+        }
+    };
+    
 
     const _deleteJuego = async(id)=>{
         const isDelete = window.confirm("¿Desea Borrar Juego?")
@@ -23,37 +50,80 @@ function Container() {
         }
     }
 
+    const handleFilter = (filter) => {
+        setFilter(filter);
+    };
+
+    const handleSort = (sortOption) => {
+        setSortBy(sortOption);
+    };
+
+    const handleSearch = (value) => {
+        setSearch(value);
+    };
+
+    // ! _____________________________ renderLinks _____________________________
+
+    const renderLinks = (juego) => {
+        if (getToken()) {
+            return (
+                <>
+                    <td className="pb-4">
+                        <Link
+                            to={`/juegos/edit/${juego.id}`}
+                            className="bg-blue-500 rounded p-[6.5px] mr-5"
+                        >
+                            Editar
+                        </Link>
+                    </td>
+                    <td className="pb-4">
+                        <button
+                            onClick={() => _deleteJuego(juego.id)}
+                            className="bg-red-500 rounded p-[5px]">
+                            Eliminar
+                        </button>
+                    </td>
+                </>
+            );
+        } else {
+            return null;
+        }
+    };
+
+    // ! _____________________________ renderLinks _____________________________
+
+
+    // ? _____________________________ renderTable _____________________________
+
+    const renderTable = () => {
+        if (getToken()) {
+            return (
+                <>
+                <th scope="col">Acciones</th>
+                </>
+            );
+        } else {
+            return null;
+        }
+    };
+
+    // ? _____________________________ renderTable _____________________________
+
 return (
     <section className='z-10 -mt-20 justify-center flex '>
         <main className=' rounded-xl bg-[#1B1D1F] w-[1200px] border-[#6C727F] border-[0.01px] mb-24 border-opacity-35'>
             <div className=' text-[#6C727F] font-semibold py-8 flex justify-between'>
                 <div className='ml-10'>
-                    <p className=''>Juegos contados 56</p>
+                    <p className=''>Juegos contados {juegos.length}</p>
                 </div>
-                <div className='mr-10'>
-                    <input type="search" name="" placeholder='Buscar' id="" className=' rounded-xl bg-[#282B30] w-[250px] h-[40px] indent-6 content-center'/>
-                </div>
+                <SearchJuego handleSearch={handleSearch}/>
             </div>
 
             <div className='flex text-[#6C727F] w-full '>
                 <div className=' w-[300px] '>
-                    <div className='p-8'>
-                        <p className='text-[14px] font-bold'>Ver por:</p>
-                        <select name=""  id="" className='bg-[#1B1D1F] border border-[#6C727F] rounded-xl w-[100%] border-opacity-35 p-2 mt-3'>
-                            <option value="">Todos</option>
-                            <option value="">Mejor valoracion</option>
-                            <option value="">Peor valoracion</option>
-                        </select>
-                    </div>
-                    <div className=' p-8 float-left'>
-                        <p className='mb-3 text-[14px] font-bold'>Genero:</p>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>FPS</button>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>Aventura</button>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>Peleas</button>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>Supervivencia</button>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>Indie</button>
-                        <button className='text-[#D2D5DA] p-2 m-1 bg-[#282B30] w-auto h-auto rounded-2xl hover:bg-slate-500 transition-colors duration-300 text-[13px]'>Dificil</button>
-                    </div>
+                    
+                    <SortJuego handleSort={handleSort}/>
+                    <FilterButtons filterCallback={handleFilter}/>
                 </div>
 
     {/* // ! ------------------- Tabla  ------------------- */}
@@ -68,41 +138,54 @@ return (
                         <th scope="col">Votacion</th>
                         <th scope="col">Compañia</th>
                         <th scope="col">Genero</th>
-                        <th scope="col">-</th>
-                        <th scope="col">-</th>
+                        <th scope="col">{renderTable()}</th>
+                        
                     </tr>
                 </thead>
 
                 <tbody className='text-[#D2D5DA]'>
-                {/* <tr className=''>
-                        <td scope="" className='pl-8'>Chris</td>
-                        <td>Zelda</td>
-                        <td>100000</td>
-                        <td>9.8</td>
-                        <td>Nintendo</td>
-                        <td>Aventura</td>
-                        <td><button className='bg-blue-500 rounded'>Editar</button></td>
-                        <td><button className='bg-red-500 rounded'>Eliminar</button></td>
-                    </tr> */}
-
-                    {
-                        !juegos ? <h1 className='text-[22px] text-center z-[-1] '>Cargando...</h1> : juegos.map(
-                            (juego) =>{
-                                return(
+                    {!juegos ? (
+                        <tr>
+                            <td colSpan="6">Cargando</td>
+                        </tr>
+                    ) : (juegos
+                            .filter((juego) => {
+                                if (!filter) return true;
+                                return juego.genero === filter; 
+                            })
+                            .filter((juego) => {
+                                if (!search) return true;
+                                return juego.nombre
+                                    .toLowerCase()
+                                    .includes(search);
+                            })
+                            .sort((a, b) => {
+                                if (sortBy === "a-z"){
+                                    return a.nombre.localeCompare(b.nombre);
+                                } else if (sortBy === "z-a"){
+                                    return b.nombre.localeCompare(a.nombre);
+                                } else if (sortBy === "mejor"){
+                                    return a.votacion - b.votacion;
+                                } else if (sortBy === "peor"){
+                                    return b.votacion - a.votacion;
+                                } else if (sortBy === "mayor"){
+                                    return a.descargas - b.descargas;
+                                } else if (sortBy === "menor"){
+                                    return b.descargas - a.descargas;
+                                } 
+                            })
+                            .map((juego) => (
                                 <tr key={juego.id}>
-                                    <td>{juego.logo}</td>
+                                    <td className='pb-1 flex justify-center'><img src={`/storage/${juego.logo}`} alt=""  className="w-16 m-2 rounded-xl justify-start"/></td>
                                     <td>{juego.nombre}</td>                                    
                                     <td>{juego.descargas}</td>                                    
                                     <td>{juego.votacion}</td>                                    
-                                    <td>{juego.empresa_id}</td>                                    
+                                    <td>{juego.empresa_nombre}</td>                                 
                                     <td>{juego.genero}</td>
-                                    <td><Link to={`/juegos/edit/${juego.id}`} className='bg-blue-500 rounded p-1'>Editar</Link> </td>
-                                    <td><button onClick={()=>_deleteJuego(juego.id)} className='bg-red-500 rounded p-1'>Eliminar</button></td>                                
+                                    <td>{renderLinks(juego)}</td>                        
                                 </tr>
-                                )
-                            }
-                        )
-                    }
+                    ))
+                    )}
 
                 </tbody>
                 </table>
